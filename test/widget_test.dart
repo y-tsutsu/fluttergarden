@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -44,5 +45,47 @@ void main() {
     await tester.pump();
 
     expect(find.text('600'), findsOneWidget);
+  });
+
+  testWidgets('ナビゲーションでToDo画面へ移動できる', (WidgetTester tester) async {
+    await tester.pumpWidget(const FlutterGardenApp());
+
+    await tester.tap(find.text('ToDo'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('ToDo is coming soon!'), findsOneWidget);
+  });
+
+  testWidgets('マウスドラッグでToDo画面へ移動できる', (WidgetTester tester) async {
+    await tester.pumpWidget(const FlutterGardenApp());
+
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.byType(PageView)),
+      kind: PointerDeviceKind.mouse,
+    );
+    await gesture.moveBy(const Offset(-500, 0));
+    await gesture.up();
+    await tester.pumpAndSettle();
+
+    expect(find.text('ToDo is coming soon!'), findsOneWidget);
+  });
+
+  testWidgets('画面を移動しても面積計算の状態を保持する', (WidgetTester tester) async {
+    await tester.pumpWidget(const FlutterGardenApp());
+
+    final sliders = find.byType(Slider);
+    tester.widget<Slider>(sliders.at(0)).onChanged!(10);
+    await tester.pump();
+    tester.widget<Slider>(sliders.at(1)).onChanged!(20);
+    await tester.pump();
+    await tester.tap(find.text('Calculate'));
+    await tester.pump();
+
+    await tester.tap(find.text('ToDo'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Calculator'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('200'), findsOneWidget);
   });
 }

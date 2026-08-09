@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fluttergarden/features/calculator/calculator_page.dart';
 import 'package:fluttergarden/features/calculator/calculator_view_model.dart';
+import 'package:fluttergarden/features/home/home_page.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -19,7 +19,7 @@ class FlutterGardenApp extends StatelessWidget {
       ),
       home: ChangeNotifierProvider(
         create: (context) => CalculatorViewModel(),
-        child: const CalculatorPage(),
+        child: const HomePage(),
       ),
     );
   }
