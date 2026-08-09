@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttergarden/features/calculator/calculator_page.dart';
+import 'package:fluttergarden/features/calculator/calculator_view_model.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const FlutterGardenApp());
@@ -15,7 +17,10 @@ class FlutterGardenApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
       ),
-      home: const CalculatorPage(),
+      home: ChangeNotifierProvider(
+        create: (context) => CalculatorViewModel(),
+        child: const CalculatorPage(),
+      ),
     );
   }
 }

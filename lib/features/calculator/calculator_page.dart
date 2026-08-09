@@ -1,56 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:fluttergarden/features/calculator/calculator_view_model.dart';
+import 'package:provider/provider.dart';
 
-class CalculatorPage extends StatefulWidget {
+class CalculatorPage extends StatelessWidget {
   const CalculatorPage({super.key});
 
   @override
-  State<CalculatorPage> createState() => _CalculatorPageState();
-}
-
-class _CalculatorPageState extends State<CalculatorPage> {
-  static const int _maxDimension = 100;
-  static const int _maxArea = _maxDimension * _maxDimension;
-
-  int _height = 0;
-  int _width = 0;
-  int _area = 0;
-  bool _continuousCalculation = false;
-
-  void _setHeight(double value) {
-    setState(() {
-      _height = value.round();
-      _updateAreaIfNeeded();
-    });
-  }
-
-  void _setWidth(double value) {
-    setState(() {
-      _width = value.round();
-      _updateAreaIfNeeded();
-    });
-  }
-
-  void _setContinuousCalculation(bool value) {
-    setState(() {
-      _continuousCalculation = value;
-      _updateAreaIfNeeded();
-    });
-  }
-
-  void _calculateArea() {
-    setState(() {
-      _area = _height * _width;
-    });
-  }
-
-  void _updateAreaIfNeeded() {
-    if (_continuousCalculation) {
-      _area = _height * _width;
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<CalculatorViewModel>();
+
     return Scaffold(
       appBar: AppBar(title: const Text('fluttergarden 🌱')),
       body: Center(
@@ -67,18 +25,22 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     Expanded(
                       child: _DimensionSlider(
                         label: 'Height',
-                        value: _height,
-                        max: _maxDimension,
-                        onChanged: _setHeight,
+                        value: viewModel.height,
+                        max: CalculatorViewModel.maxDimension,
+                        onChanged: (value) {
+                          viewModel.setHeight(value.round());
+                        },
                       ),
                     ),
                     const SizedBox(width: 32),
                     Expanded(
                       child: _DimensionSlider(
                         label: 'Width',
-                        value: _width,
-                        max: _maxDimension,
-                        onChanged: _setWidth,
+                        value: viewModel.width,
+                        max: CalculatorViewModel.maxDimension,
+                        onChanged: (value) {
+                          viewModel.setWidth(value.round());
+                        },
                       ),
                     ),
                   ],
@@ -87,14 +49,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
                   title: const Text('Continuous calculation'),
-                  value: _continuousCalculation,
-                  onChanged: _setContinuousCalculation,
+                  value: viewModel.continuousCalculation,
+                  onChanged: viewModel.setContinuousCalculation,
                 ),
                 const SizedBox(height: 16),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: FilledButton(
-                    onPressed: _calculateArea,
+                    onPressed: viewModel.calculateArea,
                     child: const Text('Calculate'),
                   ),
                 ),
@@ -102,12 +64,12 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 Text('Area', style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 Text(
-                  '$_area',
+                  '${viewModel.area}',
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 Slider(
-                  value: _area.toDouble(),
-                  max: _maxArea.toDouble(),
+                  value: viewModel.area.toDouble(),
+                  max: CalculatorViewModel.maxArea.toDouble(),
                   onChanged: null,
                 ),
               ],
