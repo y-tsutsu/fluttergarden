@@ -98,6 +98,26 @@ void main() {
     expect(find.text('No ToDos'), findsOneWidget);
   });
 
+  testWidgets('ToDoの編集画面でタイトルを変更できる', (WidgetTester tester) async {
+    await tester.pumpWidget(createTestApp());
+    await tester.tap(find.text('ToDo'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'Buy milk');
+    await tester.tap(find.text('Add'));
+    await tester.pump();
+    await tester.tap(find.text('Buy milk'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Edit ToDo'), findsOneWidget);
+    await tester.enterText(find.byType(TextField), 'Buy coffee');
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Buy milk'), findsNothing);
+    expect(find.text('Buy coffee'), findsOneWidget);
+  });
+
   testWidgets('画面を移動しても面積計算の状態を保持する', (WidgetTester tester) async {
     await tester.pumpWidget(createTestApp());
 

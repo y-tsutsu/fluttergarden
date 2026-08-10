@@ -72,6 +72,28 @@ class TodoViewModel extends ChangeNotifier {
     await _saveTodos();
   }
 
+  Future<bool> updateTodoTitle(int id, String title) async {
+    final trimmedTitle = title.trim();
+    if (trimmedTitle.isEmpty) {
+      return false;
+    }
+
+    final index = _todos.indexWhere((todo) => todo.id == id);
+    if (index == -1) {
+      return false;
+    }
+
+    final todo = _todos[index];
+    if (todo.title == trimmedTitle) {
+      return true;
+    }
+
+    _todos[index] = todo.copyWith(title: trimmedTitle);
+    notifyListeners();
+    await _saveTodos();
+    return true;
+  }
+
   Future<void> removeTodo(int id) async {
     final index = _todos.indexWhere((todo) => todo.id == id);
     if (index == -1) {

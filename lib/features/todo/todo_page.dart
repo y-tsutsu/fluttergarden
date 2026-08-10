@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttergarden/features/todo/todo.dart';
+import 'package:fluttergarden/features/todo/todo_edit_page.dart';
 import 'package:fluttergarden/features/todo/todo_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +30,15 @@ class _TodoPageState extends State<TodoPage> {
     final added = await viewModel.addTodo(_textController.text);
     if (added && mounted) {
       _textController.clear();
+    }
+  }
+
+  Future<void> _editTodo(TodoViewModel viewModel, Todo todo) async {
+    final title = await Navigator.of(context).push<String>(
+      MaterialPageRoute(builder: (context) => TodoEditPage(todo: todo)),
+    );
+    if (title != null && mounted) {
+      await viewModel.updateTodoTitle(todo.id, title);
     }
   }
 
@@ -98,6 +108,7 @@ class _TodoPageState extends State<TodoPage> {
                             key: ValueKey(todo.id),
                             todo: todo,
                             onToggle: () => viewModel.toggleTodo(todo.id),
+                            onTap: () => _editTodo(viewModel, todo),
                             onRemove: () => viewModel.removeTodo(todo.id),
                           );
                         },
@@ -116,16 +127,19 @@ class _TodoListItem extends StatelessWidget {
     super.key,
     required this.todo,
     required this.onToggle,
+    required this.onTap,
     required this.onRemove,
   });
 
   final Todo todo;
   final VoidCallback onToggle;
+  final VoidCallback onTap;
   final VoidCallback onRemove;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: onTap,
       leading: Checkbox(value: todo.completed, onChanged: (_) => onToggle()),
       title: Text(
         todo.title,

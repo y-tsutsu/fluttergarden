@@ -39,6 +39,27 @@ void main() {
     expect(identical(viewModel.todos.single, originalTodo), isFalse);
   });
 
+  test('ToDoのタイトルを変更できる', () async {
+    await viewModel.addTodo('Buy milk');
+    final originalTodo = viewModel.todos.single;
+
+    expect(
+      await viewModel.updateTodoTitle(originalTodo.id, '  Buy coffee  '),
+      isTrue,
+    );
+
+    expect(viewModel.todos.single.title, 'Buy coffee');
+    expect(identical(viewModel.todos.single, originalTodo), isFalse);
+  });
+
+  test('ToDoのタイトルを空白だけには変更しない', () async {
+    await viewModel.addTodo('Buy milk');
+    final id = viewModel.todos.single.id;
+
+    expect(await viewModel.updateTodoTitle(id, '   '), isFalse);
+    expect(viewModel.todos.single.title, 'Buy milk');
+  });
+
   test('ToDoを削除できる', () async {
     await viewModel.addTodo('Buy milk');
     final id = viewModel.todos.single.id;
