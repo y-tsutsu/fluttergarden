@@ -1,12 +1,17 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fluttergarden/features/todo/in_memory_todo_repository.dart';
 
 import 'package:fluttergarden/main.dart';
 
 void main() {
+  FlutterGardenApp createTestApp() {
+    return FlutterGardenApp(todoRepository: InMemoryTodoRepository());
+  }
+
   testWidgets('面積を計算できる', (WidgetTester tester) async {
-    await tester.pumpWidget(const FlutterGardenApp());
+    await tester.pumpWidget(createTestApp());
 
     expect(find.text('Height'), findsOneWidget);
     expect(find.text('Width'), findsOneWidget);
@@ -30,7 +35,7 @@ void main() {
   });
 
   testWidgets('連続計算で入力時に面積を更新できる', (WidgetTester tester) async {
-    await tester.pumpWidget(const FlutterGardenApp());
+    await tester.pumpWidget(createTestApp());
 
     await tester.tap(find.byType(Switch));
     await tester.pump();
@@ -48,7 +53,7 @@ void main() {
   });
 
   testWidgets('ナビゲーションでToDo画面へ移動できる', (WidgetTester tester) async {
-    await tester.pumpWidget(const FlutterGardenApp());
+    await tester.pumpWidget(createTestApp());
 
     await tester.tap(find.text('ToDo'));
     await tester.pumpAndSettle();
@@ -57,7 +62,7 @@ void main() {
   });
 
   testWidgets('マウスドラッグでToDo画面へ移動できる', (WidgetTester tester) async {
-    await tester.pumpWidget(const FlutterGardenApp());
+    await tester.pumpWidget(createTestApp());
 
     final gesture = await tester.startGesture(
       tester.getCenter(find.byType(PageView)),
@@ -71,7 +76,7 @@ void main() {
   });
 
   testWidgets('ToDoを追加して完了と削除を操作できる', (WidgetTester tester) async {
-    await tester.pumpWidget(const FlutterGardenApp());
+    await tester.pumpWidget(createTestApp());
     await tester.tap(find.text('ToDo'));
     await tester.pumpAndSettle();
 
@@ -94,7 +99,7 @@ void main() {
   });
 
   testWidgets('画面を移動しても面積計算の状態を保持する', (WidgetTester tester) async {
-    await tester.pumpWidget(const FlutterGardenApp());
+    await tester.pumpWidget(createTestApp());
 
     final sliders = find.byType(Slider);
     tester.widget<Slider>(sliders.at(0)).onChanged!(10);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttergarden/features/calculator/calculator_view_model.dart';
 import 'package:fluttergarden/features/home/home_page.dart';
-import 'package:fluttergarden/features/todo/in_memory_todo_repository.dart';
+import 'package:fluttergarden/features/todo/json_todo_repository.dart';
 import 'package:fluttergarden/features/todo/todo_repository.dart';
 import 'package:fluttergarden/features/todo/todo_view_model.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +11,9 @@ void main() {
 }
 
 class FlutterGardenApp extends StatelessWidget {
-  const FlutterGardenApp({super.key});
+  const FlutterGardenApp({super.key, this.todoRepository});
+
+  final TodoRepository? todoRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class FlutterGardenApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(create: (context) => CalculatorViewModel()),
           Provider<TodoRepository>(
-            create: (context) => InMemoryTodoRepository(),
+            create: (context) => todoRepository ?? JsonTodoRepository(),
           ),
           ChangeNotifierProvider(
             create: (context) =>

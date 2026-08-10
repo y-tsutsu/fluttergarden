@@ -55,6 +55,7 @@ class _TodoPageState extends State<TodoPage> {
                   Expanded(
                     child: TextField(
                       controller: _textController,
+                      enabled: !viewModel.isLoading,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'New ToDo',
@@ -64,7 +65,9 @@ class _TodoPageState extends State<TodoPage> {
                   ),
                   const SizedBox(width: 16),
                   FilledButton(
-                    onPressed: () => _addTodo(viewModel),
+                    onPressed: viewModel.isLoading
+                        ? null
+                        : () => _addTodo(viewModel),
                     child: const Text('Add'),
                   ),
                 ],
