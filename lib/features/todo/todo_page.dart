@@ -25,8 +25,9 @@ class _TodoPageState extends State<TodoPage> {
     super.dispose();
   }
 
-  void _addTodo(TodoViewModel viewModel) {
-    if (viewModel.addTodo(_textController.text)) {
+  Future<void> _addTodo(TodoViewModel viewModel) async {
+    final added = await viewModel.addTodo(_textController.text);
+    if (added && mounted) {
       _textController.clear();
     }
   }
@@ -35,6 +36,11 @@ class _TodoPageState extends State<TodoPage> {
   Widget build(BuildContext context) {
     final viewModel = context.watch<TodoViewModel>();
     final visibleTodos = viewModel.visibleTodos;
+    final errorMessage = switch (viewModel.error) {
+      TodoError.loadFailed => 'Failed to load ToDos',
+      TodoError.saveFailed => 'Failed to save ToDos',
+      null => null,
+    };
 
     return Center(
       child: Padding(
@@ -71,8 +77,15 @@ class _TodoPageState extends State<TodoPage> {
                 onChanged: viewModel.setShowOnlyIncomplete,
               ),
               const SizedBox(height: 8),
+              if (errorMessage != null)
+                Text(
+                  errorMessage,
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
               Expanded(
-                child: visibleTodos.isEmpty
+                child: viewModel.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : visibleTodos.isEmpty
                     ? const Center(child: Text('No ToDos'))
                     : ListView.builder(
                         itemCount: visibleTodos.length,
