@@ -53,7 +53,7 @@ void main() {
     await tester.tap(find.text('ToDo'));
     await tester.pumpAndSettle();
 
-    expect(find.text('ToDo is coming soon!'), findsOneWidget);
+    expect(find.text('New ToDo'), findsOneWidget);
   });
 
   testWidgets('マウスドラッグでToDo画面へ移動できる', (WidgetTester tester) async {
@@ -67,7 +67,30 @@ void main() {
     await gesture.up();
     await tester.pumpAndSettle();
 
-    expect(find.text('ToDo is coming soon!'), findsOneWidget);
+    expect(find.text('New ToDo'), findsOneWidget);
+  });
+
+  testWidgets('ToDoを追加して完了と削除を操作できる', (WidgetTester tester) async {
+    await tester.pumpWidget(const FlutterGardenApp());
+    await tester.tap(find.text('ToDo'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'Buy milk');
+    await tester.tap(find.text('Add'));
+    await tester.pump();
+
+    expect(find.text('Buy milk'), findsOneWidget);
+    expect(find.text('No ToDos'), findsNothing);
+
+    await tester.tap(find.byType(Checkbox));
+    await tester.pump();
+    final todoText = tester.widget<Text>(find.text('Buy milk'));
+    expect(todoText.style?.decoration, TextDecoration.lineThrough);
+
+    await tester.tap(find.byTooltip('Delete'));
+    await tester.pump();
+    expect(find.text('Buy milk'), findsNothing);
+    expect(find.text('No ToDos'), findsOneWidget);
   });
 
   testWidgets('画面を移動しても面積計算の状態を保持する', (WidgetTester tester) async {
