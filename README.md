@@ -10,6 +10,13 @@ Flutterの宣言的UIとアプリアーキテクチャを学ぶための、Linux
 - RepositoryによるJSONファイルへの永続化
 - Unit TestとWidget Test
 
+## Screenshots
+
+<p>
+  <img src="assets/screenshots/calculator.png" alt="Calculator画面" width="49%">
+  <img src="assets/screenshots/todo.png" alt="ToDo画面" width="49%">
+</p>
+
 ## Development environment
 
 現在は次の環境で開発しています。
