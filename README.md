@@ -2,6 +2,14 @@
 
 Flutterの宣言的UIとアプリアーキテクチャを学ぶための、Linuxデスクトップ向けサンプルアプリです。
 
+## Features
+
+- 高さと幅から面積を求めるCalculator
+- 追加、編集、完了切り替え、削除、絞り込みができるToDo
+- providerとChangeNotifierを使った状態管理
+- RepositoryによるJSONファイルへの永続化
+- Unit TestとWidget Test
+
 ## Development environment
 
 現在は次の環境で開発しています。
@@ -51,3 +59,27 @@ $ flutter devices
 $ flutter pub get
 $ flutter run -d linux
 ```
+
+## Analyze and test
+
+静的解析を実行します。
+
+```console
+$ flutter analyze
+```
+
+Unit TestとWidget Testをまとめて実行します。
+
+```console
+$ flutter test
+```
+
+## Build
+
+Linux向けのリリースビルドを作成します。
+
+```console
+$ flutter build linux --release
+```
+
+成果物は`build/linux/x64/release/bundle/`に生成されます。実行時は、実行ファイルだけでなく`bundle`ディレクトリ全体が必要です。
